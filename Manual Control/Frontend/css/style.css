@@ -1,0 +1,223 @@
+/* General Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+h1, h2 {
+    color: #444;
+}
+
+h1 {
+    font-weight: 600;
+    text-align: center;
+    margin: 10px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Header */
+header {
+    background: #007BFF;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Main Layout */
+main {
+    display: grid;
+    grid-template-areas: 
+        "controls video"
+        "controls sensors";
+    grid-template-columns: 1fr 2fr;
+    grid-template-rows: 2fr 1fr;
+    gap: 20px;
+    height: 80vh;
+}
+
+@media (max-width: 1024px) {
+    main {
+        grid-template-areas:
+            "video"
+            "controls"
+            "sensors";
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+        height: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .controls-grid {
+        grid-template-areas:
+            "forward"
+            "left"
+            "stop"
+            "right"
+            "backward";
+    }
+}
+
+@media (max-width: 480px) {
+    .sensor-cards {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .sensor-card {
+        width: 90%;
+    }
+}
+
+/* Controls Section */
+.controls {
+    grid-area: controls;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.controls-grid {
+    display: grid;
+    grid-template-areas:
+        ". forward ."
+        "left stop right"
+        ". backward .";
+    grid-gap: 15px;
+    justify-items: center;
+}
+
+.btn {
+    width: 100px;
+    height: 50px;
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+    background: linear-gradient(135deg, #007BFF, #0056b3);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s;
+}
+
+.btn:hover {
+    background: linear-gradient(135deg, #0056b3, #003a75);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.btn-stop {
+    background: linear-gradient(135deg, #DC3545, #a20010);
+}
+
+.btn-stop:hover {
+    background: linear-gradient(135deg, #a20010, #720008);
+}
+
+/* Button Placement */
+.btn-forward {
+    grid-area: forward;
+}
+
+.btn-left {
+    grid-area: left;
+}
+
+.btn-stop {
+    grid-area: stop;
+}
+
+.btn-right {
+    grid-area: right;
+}
+
+.btn-backward {
+    grid-area: backward;
+}
+
+/* Video Feed Section */
+.video-feed {
+    grid-area: video;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.video-container {
+    width: 100%;
+    border-radius: 10px;
+    border: 2px solid #ddd;
+    overflow: hidden;
+}
+
+.video-container img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Sensor Data Section */
+.sensor-data {
+    grid-area: sensors;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sensor-cards {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.sensor-card {
+    background: #f9f9f9;
+    padding: 15px 20px;
+    border-radius: 10px;
+    width: 30%;
+    min-width: 200px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.sensor-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+}
+
+.sensor-card h3 {
+    color: #007BFF;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
