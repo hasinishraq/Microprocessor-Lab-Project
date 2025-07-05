@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Object Tracking</title>
+    <style>
+        /* Basic reset and layout styling */
+        * {
+            0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+ 
+        body {
+            'Arial', sans-serif;
+            background-color: #f4f7fc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+ 
+        .container {
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-gap: 20px;
+            max-width: 900px;
+            width: 100%;
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+ 
+        h1 {
+            font-size: 32px;
+            color: #333;
+        }
+ 
+        h3 {
+            color: #555;
+            font-size: 18px;
+            10px;
+        }
+ 
+        #videoFeed {
+            width: 100%;
+            height: auto;
+            max-width: 500px;  /* Set a max width for the video feed */
+            0 auto;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+ 
+        .status-container {
+            background-color: #f7f7f7;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+ 
+        .status-container h2 {
+            font-size: 24px;
+            color: #333;
+        }
+ 
+        .status-container span {
+            font-weight: bold;
+            font-size: 30px;
+            color: #4CAF50;
+        }
+ 
+        .btn {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: #fff;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            20px;
+        }
+ 
+        .btn:hover {
+            background-color: #45a049;
+        }
+ 
+        .footer {
+            font-size: 12px;
+            color: #888;
+            text-align: center;
+            20px;
+        }
+ 
+        /* Responsive Design for smaller screens */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 28px;
+            }
+ 
+            .status-container h2 {
+                font-size: 20px;
+            }
+ 
+            .status-container span {
+                font-size: 24px;
+            }
+ 
+            #videoFeed {
+                max-width: 100%;
+            }
+ 
+            .container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Live Object Tracking</h1>
+        <h3>Click on a person in the video feed to select them for tracking.</h3>
+ 
+        <!-- Display the video feed -->
+        <img id="videoFeed" src="{{ url_for('video_feed') }}" alt="Video Feed" />
+ 
+        <!-- Display the movement status -->
+        <div class="status-container">
+            <h2>Current Movement: <span id="movementStatus">S</span></h2>
+        </div>
+ 
+        <button class="btn" onclick="resetTracking()">Reset Tracking</button>
+    </div>
+ 
+    <div class="footer">
+        <p>&copy; 2025 Object Tracking System | Built with ❤️</p>
+    </div>
+ 
+    <script>
+        // Actual frame dimensions that are being captured and processed
+        const videoWidth = 320; // Actual frame width
+        const videoHeight = 320; // Actual frame height
+ 
+        // Event listener for click on the video feed
+        const videoFeed = document.getElementById('videoFeed');
+        videoFeed.addEventListener('click', function(event) {
+            const rect = videoFeed.getBoundingClientRect();
+            // Scale the click coordinates based on the video feed's size and actual frame resolution
+            const x = (event.clientX - rect.left) * (videoWidth / rect.width); // Scale x
+            const y = (event.clientY - rect.top) * (videoHeight / rect.height); // Scale y
+ 
+            // Send the click position to the backend for processing
+            fetch('/select_person', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ x: x, y: y })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "Person selected") {
+                    alert("Tracking the selected person!");
+                    console.log("Person selected and tracking initiated.");
+                } else {
+                    alert("No person found at that position.");
+                    console.log("No person found.");
+                }
+            });
+        });
+ 
+        // Function to update the movement status
+        function updateMovementStatus() {
+            fetch('/get_movement')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('movementStatus').textContent = data.movement;
+                });
+        }
+ 
+        // Update the movement status every 500ms
+        setInterval(updateMovementStatus, 500);
+ 
+        // Reset tracking function (optional)
+        function resetTracking() {
+            fetch('/select_person', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ x: -1, y: -1 })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "No person found") {
+                    alert("Tracking reset.");
+                }
+            });
+        }
+    </script>
+</body>
+</html>
