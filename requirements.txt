@@ -1,0 +1,22 @@
+# ── Road Rover – Python Dependencies ──────────────────────────────────────────
+# Install on the Raspberry Pi with:
+#   pip install -r requirements.txt
+
+# ── Core vision ───────────────────────────────────────────────────────────────
+ultralytics>=8.0.0          # YOLOv8 detection
+opencv-python-headless>=4.8 # Image processing (headless = no GUI deps)
+picamera2>=0.3.12           # Raspberry Pi Camera interface
+
+# ── Web servers ───────────────────────────────────────────────────────────────
+flask>=3.0.0                # REST API + HTML serving
+folium>=0.16.0              # Interactive Leaflet maps
+
+# ── Database ──────────────────────────────────────────────────────────────────
+mysql-connector-python>=8.3 # MySQL / MariaDB driver
+
+# ── Hardware interfaces ───────────────────────────────────────────────────────
+pyserial>=3.5               # GPS + Arduino serial communication
+smbus2>=0.4.3               # MPU-6050 accelerometer over I²C
+
+# ── Utilities ─────────────────────────────────────────────────────────────────
+numpy>=1.24                 # Array operations (pulled in by ultralytics / cv2)

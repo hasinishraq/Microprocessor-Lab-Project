@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Road Rover – Manual Control</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <i class="fas fa-car-side"></i>
+    <span>Road Rover <em>– Manual Control</em></span>
+  </div>
+  <div id="status-badge" class="badge badge-idle">● Idle</div>
+</header>
+
+<main class="layout">
+
+  <!-- ── D-Pad Controls ─────────────────────────────────────── -->
+  <section class="panel controls-panel">
+    <h2><i class="fas fa-gamepad"></i> Controls</h2>
+    <div class="dpad">
+      <button id="btn-forward"
+              onmousedown="send('forward','start')" ontouchstart="send('forward','start')"
+              onmouseup="send('forward','stop')"   ontouchend="send('forward','stop')"
+              class="dpad-btn dpad-up">
+        <i class="fas fa-chevron-up"></i>
+      </button>
+
+      <button id="btn-left"
+              onmousedown="send('left','start')" ontouchstart="send('left','start')"
+              onmouseup="send('left','stop')"   ontouchend="send('left','stop')"
+              class="dpad-btn dpad-left">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+
+      <button id="btn-stop"
+              onclick="send('stop','start')"
+              class="dpad-btn dpad-center stop-btn">
+        <i class="fas fa-stop"></i>
+      </button>
+
+      <button id="btn-right"
+              onmousedown="send('right','start')" ontouchstart="send('right','start')"
+              onmouseup="send('right','stop')"   ontouchend="send('right','stop')"
+              class="dpad-btn dpad-right">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+
+      <button id="btn-backward"
+              onmousedown="send('backward','start')" ontouchstart="send('backward','start')"
+              onmouseup="send('backward','stop')"   ontouchend="send('backward','stop')"
+              class="dpad-btn dpad-down">
+        <i class="fas fa-chevron-down"></i>
+      </button>
+    </div>
+
+    <!-- Keyboard hint -->
+    <p class="hint"><i class="fas fa-keyboard"></i> Keyboard: W A S D / Arrow keys</p>
+  </section>
+
+  <!-- ── Live Feed ──────────────────────────────────────────── -->
+  <section class="panel video-panel">
+    <h2><i class="fas fa-video"></i> Live Feed</h2>
+    <div class="video-box">
+      <img id="video-stream" src="/video_feed" alt="Live camera feed" />
+    </div>
+  </section>
+
+</main>
+
+<script src="script/script.js"></script>
+</body>
+</html>

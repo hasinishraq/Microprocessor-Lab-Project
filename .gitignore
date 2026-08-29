@@ -1,0 +1,56 @@
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+*.whl
+
+# ── Virtual environments ──────────────────────────────────────────────────────
+.venv/
+venv/
+env/
+ENV/
+
+# ── IDE / Editor ──────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.suo
+*.swp
+*~
+
+# ── Secrets / Config ──────────────────────────────────────────────────────────
+.env
+*.env.local
+config/local_settings.py
+
+# ── Models (large binary files – download separately) ─────────────────────────
+models/
+*.pt
+*.onnx
+*.ncnn
+*.bin
+*.param
+
+# ── Logs & temporary files ────────────────────────────────────────────────────
+logs/
+*.log
+*.tmp
+
+# ── OS ────────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Database dumps ────────────────────────────────────────────────────────────
+*.sql.gz
+*.dump
+
+# ── Jupyter ───────────────────────────────────────────────────────────────────
+.ipynb_checkpoints/
+*.ipynb

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Road Rover – Detection Map</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0d1117;
+      --surface:   #161b22;
+      --border:    #30363d;
+      --accent:    #58a6ff;
+      --red:       #f85149;
+      --orange:    #e3b341;
+      --green:     #3fb950;
+      --text:      #c9d1d9;
+      --subtext:   #8b949e;
+      --radius:    12px;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Top Bar ── */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .logo { font-size: 22px; font-weight: 700; color: var(--accent); display: flex; align-items: center; gap: 8px; }
+    .logo i { font-size: 20px; }
+    .subtitle { color: var(--subtext); font-size: 13px; margin-top: 2px; }
+    .refresh-btn {
+      margin-left: auto;
+      background: var(--accent);
+      color: #0d1117;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 18px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: opacity .2s;
+    }
+    .refresh-btn:hover { opacity: .85; }
+
+    /* ── Stats Row ── */
+    .stats-row {
+      display: flex;
+      gap: 16px;
+      padding: 16px 24px;
+      flex-wrap: wrap;
+    }
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 24px;
+      flex: 1;
+      min-width: 140px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      transition: border-color .2s;
+    }
+    .stat-card:hover { border-color: var(--accent); }
+    .stat-label { font-size: 12px; color: var(--subtext); text-transform: uppercase; letter-spacing: .5px; }
+    .stat-value { font-size: 28px; font-weight: 700; }
+    .stat-card.total   .stat-value { color: var(--accent); }
+    .stat-card.pothole .stat-value { color: var(--red); }
+    .stat-card.crack   .stat-value { color: var(--orange); }
+    .stat-card.bump    .stat-value { color: #a371f7; }
+
+    /* ── Map ── */
+    .map-wrap {
+      flex: 1;
+      padding: 0 24px 24px;
+    }
+    .map-wrap iframe, .map-wrap .folium-map {
+      width: 100% !important;
+      height: 100% !important;
+      min-height: 520px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+    }
+
+    /* ── Footer ── */
+    footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 10px 24px;
+      font-size: 12px;
+      color: var(--subtext);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="logo"><i class="fas fa-car-side"></i> Road Rover</div>
+    <div class="subtitle">Real-time pothole &amp; crack detection map</div>
+  </div>
+  <button class="refresh-btn" onclick="location.reload()">
+    <i class="fas fa-sync-alt"></i> Refresh
+  </button>
+</header>
+
+<div class="stats-row">
+  <div class="stat-card total">
+    <span class="stat-label"><i class="fas fa-map-marker-alt"></i> Total Detections</span>
+    <span class="stat-value">{{ total }}</span>
+  </div>
+  <div class="stat-card pothole">
+    <span class="stat-label"><i class="fas fa-exclamation-triangle"></i> Potholes</span>
+    <span class="stat-value">{{ stats.get('Pothole', 0) }}</span>
+  </div>
+  <div class="stat-card crack">
+    <span class="stat-label"><i class="fas fa-times-circle"></i> Cracks</span>
+    <span class="stat-value">{{ stats.get('Crack', 0) }}</span>
+  </div>
+  <div class="stat-card bump">
+    <span class="stat-label"><i class="fas fa-bolt"></i> Bump Events</span>
+    <span class="stat-value">{{ stats.get('BumpEvent', 0) }}</span>
+  </div>
+</div>
+
+<div class="map-wrap">
+  {{ map_html | safe }}
+</div>
+
+<footer>
+  Road Rover – Microprocessor Lab Project &nbsp;|&nbsp;
+  Raspberry Pi 4 · Pi Camera · GPS · MPU-6050 · YOLOv8
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Road Rover – Human Following</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0d1117; --surface: #161b22; --border: #30363d;
+      --accent: #58a6ff; --green: #3fb950; --red: #f85149;
+      --text: #c9d1d9; --sub: #8b949e; --radius: 14px;
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+
+    header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 14px 24px; display: flex; align-items: center; gap: 12px; }
+    .brand { font-size: 18px; font-weight: 700; color: var(--accent); display: flex; align-items: center; gap: 8px; }
+    .brand em { font-style: normal; color: var(--sub); font-weight: 400; font-size: 14px; }
+
+    main { display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 24px; flex: 1; }
+
+    .video-wrapper {
+      position: relative;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 2px solid var(--border);
+      cursor: crosshair;
+      max-width: 640px;
+      width: 100%;
+      background: #000;
+    }
+    .video-wrapper img { width: 100%; display: block; }
+    .click-hint {
+      position: absolute;
+      top: 10px; left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,.6);
+      color: #fff;
+      font-size: 12px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      pointer-events: none;
+      backdrop-filter: blur(4px);
+    }
+
+    .info-row { display: flex; gap: 16px; width: 100%; max-width: 640px; }
+    .info-card {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+    }
+    .info-label { font-size: 11px; color: var(--sub); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
+    .info-value { font-size: 24px; font-weight: 700; color: var(--accent); }
+
+    .btn-row { display: flex; gap: 12px; }
+    .btn {
+      padding: 10px 22px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: opacity .2s;
+    }
+    .btn:hover { opacity: .85; }
+    .btn-danger  { background: var(--red);   color: #fff; }
+    .btn-neutral { background: var(--border); color: var(--text); }
+
+    .toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--text); padding: 10px 22px; border-radius: 10px;
+      font-size: 13px; font-weight: 500;
+      opacity: 0; transition: opacity .3s;
+      pointer-events: none; z-index: 99;
+    }
+    .toast.show { opacity: 1; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="brand"><i class="fas fa-person-walking"></i> Road Rover <em>– Human Following</em></div>
+</header>
+
+<main>
+  <div class="video-wrapper" id="video-wrap">
+    <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click on a person to start tracking</div>
+    <img id="video-stream" src="/video_feed" alt="Live camera feed" />
+  </div>
+
+  <div class="info-row">
+    <div class="info-card">
+      <div class="info-label"><i class="fas fa-arrows-alt"></i> Movement</div>
+      <div class="info-value" id="movement-val">—</div>
+    </div>
+    <div class="info-card">
+      <div class="info-label"><i class="fas fa-user"></i> Tracking</div>
+      <div class="info-value" id="tracking-val">None</div>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-danger" onclick="deselect()">
+      <i class="fas fa-stop-circle"></i> Stop Tracking
+    </button>
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const FRAME_W = 320, FRAME_H = 320;
+  const movEl   = document.getElementById("movement-val");
+  const trkEl   = document.getElementById("tracking-val");
+  const toast   = document.getElementById("toast");
+  let tracking  = false;
+
+  const MOVE_LABELS = { F: "▲ Forward", B: "▼ Backward", L: "◀ Left", R: "▶ Right", S: "■ Stopped" };
+
+  // ── Click to select ────────────────────────────────────────────────────────
+  document.getElementById("video-stream").addEventListener("click", async (e) => {
+    const img  = e.currentTarget;
+    const rect = img.getBoundingClientRect();
+    const x    = (e.clientX - rect.left)  * (FRAME_W / rect.width);
+    const y    = (e.clientY - rect.top)   * (FRAME_H / rect.height);
+
+    const res  = await fetch("/select_person", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ x, y }),
+    });
+    const data = await res.json();
+
+    if (data.status === "selected") {
+      tracking = true;
+      trkEl.textContent = "Active ✓";
+      trkEl.style.color = "var(--green)";
+      showToast("✓ Tracking started!");
+    } else {
+      showToast("✗ No person found at that position.");
+    }
+  });
+
+  // ── Deselect ───────────────────────────────────────────────────────────────
+  async function deselect() {
+    await fetch("/deselect", { method: "POST" });
+    tracking = false;
+    trkEl.textContent = "None";
+    trkEl.style.color = "var(--sub)";
+    showToast("Tracking stopped.");
+  }
+
+  // ── Movement poll ──────────────────────────────────────────────────────────
+  setInterval(async () => {
+    const res  = await fetch("/get_movement");
+    const data = await res.json();
+    movEl.textContent = MOVE_LABELS[data.movement] || data.movement;
+  }, 500);
+
+  // ── Toast helper ──────────────────────────────────────────────────────────
+  let _toastTimer;
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add("show");
+    clearTimeout(_toastTimer);
+    _toastTimer = setTimeout(() => toast.classList.remove("show"), 2500);
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,160 @@
+/* manual_control/frontend/css/style.css */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:      #0d1117;
+  --surface: #161b22;
+  --border:  #30363d;
+  --accent:  #58a6ff;
+  --danger:  #f85149;
+  --text:    #c9d1d9;
+  --sub:     #8b949e;
+  --radius:  14px;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Top bar ── */
+.topbar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.brand {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.brand em { font-style: normal; color: var(--sub); font-weight: 400; font-size: 15px; }
+
+/* Status badge */
+.badge {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 4px 14px;
+  border-radius: 20px;
+  border: 1px solid;
+  transition: all .3s;
+}
+.badge-idle    { color: var(--sub);    border-color: var(--sub); }
+.badge-moving  { color: var(--accent); border-color: var(--accent); }
+.badge-stopped { color: var(--danger); border-color: var(--danger); }
+
+/* ── Layout ── */
+.layout {
+  display: flex;
+  gap: 20px;
+  padding: 20px 24px;
+  flex: 1;
+  flex-wrap: wrap;
+}
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.panel h2 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--sub);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ── Controls panel ── */
+.controls-panel {
+  flex: 0 0 280px;
+  align-items: center;
+}
+
+/* ── D-Pad ── */
+.dpad {
+  display: grid;
+  grid-template-columns: repeat(3, 72px);
+  grid-template-rows:    repeat(3, 72px);
+  gap: 8px;
+}
+
+.dpad-btn {
+  width: 72px;
+  height: 72px;
+  border-radius: 12px;
+  border: 2px solid var(--border);
+  background: #1c2128;
+  color: var(--text);
+  font-size: 22px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .15s, border-color .15s, transform .1s;
+  user-select: none;
+}
+.dpad-btn:active, .dpad-btn.pressed {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #0d1117;
+  transform: scale(.93);
+}
+
+/* Grid placement */
+.dpad-up     { grid-column: 2; grid-row: 1; }
+.dpad-left   { grid-column: 1; grid-row: 2; }
+.dpad-center { grid-column: 2; grid-row: 2; }
+.dpad-right  { grid-column: 3; grid-row: 2; }
+.dpad-down   { grid-column: 2; grid-row: 3; }
+
+.stop-btn {
+  background: #3d1e1e;
+  border-color: var(--danger);
+  color: var(--danger);
+}
+.stop-btn:active, .stop-btn.pressed {
+  background: var(--danger);
+  color: #fff;
+}
+
+.hint {
+  font-size: 12px;
+  color: var(--sub);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ── Video panel ── */
+.video-panel { flex: 1; min-width: 300px; }
+
+.video-box {
+  background: #000;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+.video-box img {
+  width: 100%;
+  max-height: 480px;
+  object-fit: contain;
+}
