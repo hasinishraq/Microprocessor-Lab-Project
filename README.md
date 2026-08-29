@@ -40,6 +40,7 @@
 - [🛠️ Arduino Firmware](#️-arduino-firmware)
 - [📡 API Reference](#-api-reference)
 - [🤝 Contributing](#-contributing)
+- [👥 Team Members](#-team-members)
 - [📄 License](#-license)
 
 ---
@@ -444,12 +445,18 @@ Pull requests are welcome! Please:
 
 ---
 
-## 📄 License
+## 👥 Team Members
 
-This project is licensed under the **MIT License** – see the [LICENSE](LICENSE) file for details.
+| Name | Role |
+|------|------|
+| **Md. Hasin Ishraq** | Team Leader |
+| Umme Sanjida Zaman | Member |
+| Urmi Urma Snigdha | Member |
+| Sayeda Nahiyan Ferdous | Member |
+| Sayed Mahir Daiyan | Member |
 
 ---
 
-<div align="center">
-  <sub>Built with ❤️ for the Microprocessor Lab — Raspberry Pi 4 · YOLOv8 · GPS · MPU-6050</sub>
-</div>
+## 📄 License
+
+This project is licensed under the **MIT License** – see the [LICENSE](LICENSE) file for details.
